@@ -13,6 +13,10 @@ fastapi = "^0.100.1"
 sqlalchemy = "^2.0.19"
 pydantic = "^2.1.1"
 alembic = "^1.11.1"
+psycopg2-binary = "^2.9.6"
+python-dotenv = "^1.0.0"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+python-multipart = "^0.0.6"
 
 
 [build-system]

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, LargeBinary,ForeignKey
+from sqlalchemy import Column, Integer, String, LargeBinary, ForeignKey
 from .database import Base
 
 
@@ -9,8 +9,10 @@ class Music(Base):
     title = Column(String, index=True)
     artist = Column(String)
     genre = Column(String)
-    ava_music = Column(LargeBinary)
-    music_data = Column(LargeBinary, nullable=False)
+    photo = Column(String)
+    music = Column(String, nullable=False)
+
+    user_id = Column(ForeignKey('users.id'))
 
 
 class User(Base):
@@ -26,7 +28,13 @@ class User(Base):
 class Favorite(Base):
     __tablename__ = "favorites"
 
-    id = Column(Integer, primary_key=True,index=True)
+    id = Column(Integer, primary_key=True, index=True)
     user_id = Column(ForeignKey('users.id'))
     music_id = Column(ForeignKey('musics.id'))
 
+
+class SuperUser(Base):
+    __tablename__ = "superusers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(ForeignKey('users.id'),unique=True)

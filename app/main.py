@@ -5,6 +5,7 @@ from .auth.router_auth import router as auth_router
 from .profile.router_profile import router as profile_router
 from .spotify.router_spotify import router as spotify_router
 from .superuser.route_superuser import router as superuser_router
+from .favorite.router_favorite import router as favorite_router
 from fastapi.staticfiles import StaticFiles
 Base.metadata.create_all(bind=engine)
 
@@ -29,4 +30,5 @@ app.add_middleware(
 app.include_router(prefix="/spotify",router=auth_router)
 app.include_router(prefix="/spotify",router=profile_router)
 app.include_router(router=spotify_router)
+app.include_router(prefix="/spotify",router=favorite_router)
 app.include_router(prefix="/spotify",router=superuser_router)

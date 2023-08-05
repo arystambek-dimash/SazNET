@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, LargeBinary, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from .database import Base
 
 
@@ -13,6 +14,7 @@ class Music(Base):
     music = Column(String, nullable=False)
 
     user_id = Column(ForeignKey('users.id'))
+    favorites = relationship('Favorite', back_populates='musics')
 
 
 class User(Base):
@@ -24,17 +26,22 @@ class User(Base):
     name = Column(String)
     lastname = Column(String)
 
+    favorites = relationship('Favorite', back_populates='users')
+
 
 class Favorite(Base):
     __tablename__ = "favorites"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(ForeignKey('users.id'))
-    music_id = Column(ForeignKey('musics.id'))
+    user_id = Column(ForeignKey('users.id', ondelete="CASCADE"))
+    music_id = Column(ForeignKey('musics.id', ondelete="CASCADE"))
+
+    users = relationship('User', back_populates='favorites', cascade="all,delete")
+    musics = relationship('Music', back_populates='favorites', cascade="all,delete")
 
 
 class SuperUser(Base):
     __tablename__ = "superusers"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(ForeignKey('users.id'),unique=True)
+    user_id = Column(ForeignKey('users.id'), unique=True)

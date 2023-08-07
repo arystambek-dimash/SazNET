@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: spotify-postgres
+    environment:
+      POSTGRES_USER: railway
+      POSTGRES_PASSWORD: CRzatuvuk2NugoqsTQ2G
+      POSTGRES_DB: containers-us-west-72.railway.app
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "6316:6316"
+
+volumes:
+  postgres_data:

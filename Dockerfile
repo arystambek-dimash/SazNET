@@ -17,8 +17,8 @@ ENTRYPOINT ["sh", "./scripts/launch.sh"]
 
 FROM postgres:latest
 
-ENV POSTGRES_USER=dimash
-ENV POSTGRES_PASSWORD=dima2005
-ENV POSTGRES_DB=localhost
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=CRzatuvuk2NugoqsTQ2G
+ENV POSTGRES_DB=railway
 
 EXPOSE 5432

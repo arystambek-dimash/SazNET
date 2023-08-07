@@ -1,11 +1,3 @@
-FROM postgres:latest
-
-ENV POSTGRES_USER=postgres
-ENV POSTGRES_PASSWORD=CRzatuvuk2NugoqsTQ2G
-ENV POSTGRES_DB=railway
-
-EXPOSE 6316
-
 FROM python:3.10 as requirements-stage
 
 WORKDIR /tmp

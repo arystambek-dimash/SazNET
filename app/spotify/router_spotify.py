@@ -1,13 +1,14 @@
 from typing import List
 
 from sqlalchemy.orm import Session
-from .repository.spotify_repository import music_repo,MusicResponse
-from fastapi import Depends, APIRouter,\
+from .repository.spotify_repository import music_repo, MusicResponse, GenreResponse
+from fastapi import Depends, APIRouter, \
     HTTPException, Query, UploadFile, File, Form
 import secrets, os
 from PIL import Image
 from ..dependencies import get_db, get_current_user
 from ..superuser.repository.superuser_repo import super_user_repo
+
 router = APIRouter(prefix="/spotify", tags=["Spotify"])
 
 FILEPATH = os.path.join('static', 'images')
@@ -24,6 +25,8 @@ async def create_music(
         db: Session = Depends(get_db),
         current_user=Depends(get_current_user)
 ):
+    if genre not in [i.genre for i in music_repo.get_all_genres(db)]:
+        music_repo.save_to_genre(genre,db)
     img_extension = image.filename.split(".")[-1].lower()
     if img_extension not in ["jpg", "png"]:
         raise HTTPException(status_code=409, detail="Invalid image format")
@@ -49,7 +52,7 @@ async def create_music(
     return {"message": "Successfully added music"}
 
 
-@router.get("/musics",response_model=List[MusicResponse])
+@router.get("/musics", response_model=List[MusicResponse])
 def musics(title: str = Query(None), db: Session = Depends(get_db)):
     if title:
         all_music = music_repo.get_all(db)
@@ -59,11 +62,21 @@ def musics(title: str = Query(None), db: Session = Depends(get_db)):
 
 
 @router.delete("/musics/{id}")
-def musics(id:int, db : Session = Depends(get_db),current_user=Depends(get_current_user)):
-    db_music = music_repo.get_music_by_id(db,id)
+def musics(id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+    db_music = music_repo.get_music_by_id(db, id)
     if db_music:
         if db_music.user_id == current_user.id or current_user.id in super_user_repo.get_all_super_user(db):
-            music_repo.delete_music(db,id)
-            return {"message":"successful deleted"}
-        raise HTTPException(status_code=403,detail="Forbidden,ur not the user which post the music")
-    raise HTTPException(status_code=404,detail="Not music such id")
+            music_repo.delete_music(db, id)
+            return {"message": "successful deleted"}
+        raise HTTPException(status_code=403, detail="Forbidden,ur not the user which post the music")
+    raise HTTPException(status_code=404, detail="Not music such id")
+
+
+@router.get("/genres/", response_model=List[GenreResponse])
+def get_all_genres(db: Session = Depends(get_db)):
+    return music_repo.get_all_genres(db)
+
+
+@router.get('/genres/{genre}')
+def get_genres(genre, db: Session = Depends(get_db)):
+    return music_repo.get_musics_with_genres(genre, db)

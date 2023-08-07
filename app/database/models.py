@@ -45,3 +45,9 @@ class SuperUser(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(ForeignKey('users.id'), unique=True)
+
+
+class Genres(Base):
+    __tablename__ = "genres"
+    id = Column(Integer,primary_key=True,index=True)
+    genre = Column(String,unique=True,index=True)

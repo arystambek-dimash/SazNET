@@ -1,6 +1,6 @@
-from ...database.models import Music
+from ...database.models import Music, Genres
 from fastapi import UploadFile
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import update, delete
 
@@ -14,9 +14,13 @@ class MusicResponse(BaseModel):
     music: str
 
 
+class GenreResponse(BaseModel):
+    genre: str
+
+
 class MusicRepository:
     @staticmethod
-    def create_music(db: Session, user_id,image,audio ,title,genre,artist):
+    def create_music(db: Session, user_id, image, audio, title, genre, artist):
         music = Music(title=title, artist=artist,
                       photo=image,
                       genre=genre,
@@ -48,6 +52,22 @@ class MusicRepository:
     @staticmethod
     def get_music_by_id(db: Session, music_id):
         return db.query(Music).filter(Music.id == music_id).first()
+
+    @staticmethod
+    def get_musics_with_genres(genre, db: Session):
+        return db.query(Music).filter(Music.genre == genre).all()
+
+    @staticmethod
+    def get_all_genres(db: Session):
+        return db.query(Genres).all()
+
+    @staticmethod
+    def save_to_genre(genre, db: Session):
+        db_genre = Genres(genre=genre)
+        db.add(db_genre)
+        db.commit()
+        db.refresh(db_genre)
+        return db_genre
 
 
 music_repo = MusicRepository()

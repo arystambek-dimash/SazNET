@@ -1,10 +1,17 @@
+FROM postgres:latest
+
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=CRzatuvuk2NugoqsTQ2G
+ENV POSTGRES_DB=railway
+
+EXPOSE 6316
+
 FROM python:3.10 as requirements-stage
 
 WORKDIR /tmp
 RUN pip install poetry==1.5.0
 COPY ./pyproject.toml ./poetry.lock* /tmp/
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
-
 
 FROM python:3.10
 
@@ -15,10 +22,3 @@ COPY . .
 
 ENTRYPOINT ["sh", "./scripts/launch.sh"]
 
-FROM postgres:latest
-
-ENV POSTGRES_USER=postgres
-ENV POSTGRES_PASSWORD=CRzatuvuk2NugoqsTQ2G
-ENV POSTGRES_DB=railway
-
-EXPOSE 6316

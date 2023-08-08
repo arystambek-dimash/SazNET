@@ -5,7 +5,7 @@ from .database.database import SessionLocal
 from .auth.repository.user_repository import user_repo
 from jose import jwt
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="spotify/auth/login/")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="spotify/auth/login")
 
 
 def get_db():
